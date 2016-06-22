@@ -16,6 +16,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -116,7 +117,7 @@ public class ImageViewerController {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("No images to display");
 			alert.show();
-			if (timer != null){
+			if (timer != null) {
 				isSlideShowButtonClicked = false;
 				timer.cancel();
 			}
@@ -124,7 +125,7 @@ public class ImageViewerController {
 			imagesList.getItems().clear();
 		}
 		if (!imageFiles.isEmpty()) {
-			if (timer != null){
+			if (timer != null) {
 				isSlideShowButtonClicked = false;
 				timer.cancel();
 			}
@@ -287,15 +288,31 @@ public class ImageViewerController {
 	}
 
 	private void slideShow() {
-		long displayImageTime = 2000;
-		timer = new Timer();
-		TimerTask task = new TimerTask() {
+		Task<Void> backgroundTask = new Task<Void>() {
 			@Override
-			public void run() {
-				displayNext();
+			protected Void call() throws Exception {
+
+				long displayImageTime = 2000;
+				timer = new Timer();
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						displayNext();
+						LOG.debug("Thread is working");
+					}
+				};
+				timer.schedule(task, displayImageTime, displayImageTime);
+				return null;
+			}
+
+			@Override
+			protected void succeeded() {
+				LOG.debug("succeeded() called");
 			}
 		};
-		timer.schedule(task, displayImageTime, displayImageTime);
+		Thread thread = new Thread(backgroundTask);
+		thread.setDaemon(true);
+		thread.start();
 
 	}
 }
