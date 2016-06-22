@@ -25,8 +25,8 @@ public class Startup extends Application {
 
 		primaryStage.setTitle("StarterKit-JavaFX");
 
-		Parent root = FXMLLoader.load(getClass().getResource("/com/capgemini/javafx/view/image-viewer.fxml")); //
-//				ResourceBundle.getBundle("com/starterkit/javafx/bundle/base"));
+		Parent root = FXMLLoader.load(getClass().getResource("/com/capgemini/javafx/view/image-viewer.fxml"),
+				ResourceBundle.getBundle("com/capgemini/javafx/bundle/base"));
 
 		Scene scene = new Scene(root);
 
