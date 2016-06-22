@@ -64,9 +64,13 @@ public class ImageViewerController {
 	ListView<String> imagesList;
 
 	private Timer timer;
+
 	final DoubleProperty zoomProperty = new SimpleDoubleProperty(200);
+
 	private List<File> imageFiles = new ArrayList<File>();
-	private int imageListIndex = 0;
+
+	private int imageListIndex;
+
 	private boolean isSlideShowButtonClicked = false;
 
 	public ImageViewerController() {
@@ -78,7 +82,6 @@ public class ImageViewerController {
 		initialImage();
 
 		zoomProperty.addListener(new InvalidationListener() {
-
 			@Override
 			public void invalidated(Observable observable) {
 				image.setFitWidth(zoomProperty.get() * 4);
@@ -91,9 +94,9 @@ public class ImageViewerController {
 			@Override
 			public void handle(ScrollEvent event) {
 				if (event.getDeltaY() > 0) {
-					zoomProperty.set(zoomProperty.get() * 1.1);
+					zoomProperty.set(zoomProperty.get() * 1.2);
 				} else if (event.getDeltaY() < 0) {
-					zoomProperty.set(zoomProperty.get() / 1.1);
+					zoomProperty.set(zoomProperty.get() / 1.2);
 				}
 			}
 		});
@@ -113,10 +116,19 @@ public class ImageViewerController {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("No images to display");
 			alert.show();
+			if (timer != null){
+				isSlideShowButtonClicked = false;
+				timer.cancel();
+			}
 			initialImage();
 			imagesList.getItems().clear();
 		}
 		if (!imageFiles.isEmpty()) {
+			if (timer != null){
+				isSlideShowButtonClicked = false;
+				timer.cancel();
+			}
+			imageListIndex = 0;
 			showImageFiles(imageFiles);
 			String absolutePath = "file:" + imageFiles.get(imageListIndex).getAbsolutePath();
 			Image selectedImage = new Image(absolutePath);
@@ -164,19 +176,14 @@ public class ImageViewerController {
 			@Override
 			public void updateItem(String name, boolean empty) {
 				super.updateItem(name, empty);
-				if (empty) {
-					setText(null);
-					setGraphic(null);
-				} else {
-					for (File file : files) {
-						if (file.getName().equals(name))
-							imageView.setImage(new Image("file:" + file.getAbsolutePath()));
-					}
-					imageView.setFitWidth(70);
-					imageView.setFitHeight(70);
-					setText(name);
-					setGraphic(imageView);
+
+				for (File file : files) {
+					if (file.getName().equals(name))
+						imageView.setImage(new Image("file:" + file.getAbsolutePath()));
 				}
+				imageView.setFitWidth(70);
+				imageView.setFitHeight(70);
+				setGraphic(imageView);
 			}
 		});
 
@@ -188,7 +195,7 @@ public class ImageViewerController {
 	}
 
 	private void displayNext() {
-		
+
 		if (imageFiles.isEmpty()) {
 			LOG.debug("No Image to display");
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -225,6 +232,7 @@ public class ImageViewerController {
 			if (imageListIndex > 0) {
 				imageListIndex = imageListIndex - 1;
 				absolutePath = "file:" + imageFiles.get(imageListIndex).getAbsolutePath();
+				LOG.debug(imageFiles.get(imageListIndex).getAbsolutePath());
 			}
 			if (imageListIndex == 0) {
 				imageListIndex = imageFiles.size() - 1;
@@ -269,6 +277,7 @@ public class ImageViewerController {
 		} else {
 			if (!isSlideShowButtonClicked) {
 				isSlideShowButtonClicked = true;
+				imagesList.getSelectionModel().clearSelection();
 				slideShow();
 			} else {
 				isSlideShowButtonClicked = false;
@@ -280,12 +289,13 @@ public class ImageViewerController {
 	private void slideShow() {
 		long displayImageTime = 2000;
 		timer = new Timer();
-		timer.schedule(new TimerTask() {
+		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				displayNext();
 			}
-		}, displayImageTime, displayImageTime);
+		};
+		timer.schedule(task, displayImageTime, displayImageTime);
 
 	}
 }

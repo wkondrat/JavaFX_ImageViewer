@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.capgemini.javafx.controller.ImageViewerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.capgemini.javafx.controller.ImageViewerController">
 	<children>
 	<Label alignment="CENTER" layoutX="350.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="formTitle" text="%label.formTitle" textAlignment="CENTER" />
       <ScrollPane fx:id="imageScrollPane" layoutX="50.0" layoutY="60.0" pannable="true" prefHeight="437.0" prefWidth="800.0">
@@ -22,6 +22,6 @@
       <Button fx:id="next" layoutX="700.0" layoutY="648.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextButtonAction" prefHeight="30.0" prefWidth="120.0" text="%button.next" />
       <Button fx:id="previous" layoutX="80.0" layoutY="648.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#previousButtonAction" prefHeight="30.0" prefWidth="120.0" text="%button.previous" />
       <Button fx:id="openButton" layoutX="300.0" layoutY="648.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openButtonAction" prefHeight="30.0" prefWidth="120.0" text="%button.open_file" />
-      <Button fx:id="slideShowButton" layoutX="500.0" layoutY="648.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#slideShowButtonAction" prefHeight="30.0" prefWidth="120.0" text="%button.slideShow" />
+      <Button fx:id="slideShowButton" layoutX="500.0" layoutY="648.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#slideShowButtonAction" prefHeight="30.0" prefWidth="120.0" text="%button.slideshow" />
 	</children>
-</Pane>
+</AnchorPane>

@@ -34,7 +34,6 @@ public class Startup extends Application {
 		 * Set the style sheet(s) for application.
 		 */
 		scene.getStylesheets().add(getClass().getResource("/com/capgemini/javafx/css/standard.css").toExternalForm());
-		// scene.getStylesheets().add(getClass().getResource("/com/starterkit/javafx/css/alternative.css").toExternalForm());
 
 		primaryStage.setScene(scene);
 
