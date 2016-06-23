@@ -82,6 +82,7 @@ public class ImageViewerController {
 	public void initialize() {
 		initialImage();
 
+		// REV: dlaczego InvalidationListener, a nie ChangeListener?
 		zoomProperty.addListener(new InvalidationListener() {
 			@Override
 			public void invalidated(Observable observable) {
@@ -91,6 +92,7 @@ public class ImageViewerController {
 			}
 		});
 
+		// REV: powinienes uzyc EventHandlera
 		image.addEventFilter(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
@@ -115,6 +117,7 @@ public class ImageViewerController {
 		if (imageFiles.isEmpty()) {
 			LOG.debug("No images to display");
 			Alert alert = new Alert(AlertType.INFORMATION);
+			// REV: tekst z bundla
 			alert.setContentText("No images to display");
 			alert.show();
 			if (timer != null) {
@@ -124,6 +127,7 @@ public class ImageViewerController {
 			initialImage();
 			imagesList.getItems().clear();
 		}
+		// REV: else?
 		if (!imageFiles.isEmpty()) {
 			if (timer != null) {
 				isSlideShowButtonClicked = false;
@@ -141,6 +145,7 @@ public class ImageViewerController {
 		List<File> imagesList = new ArrayList<File>();
 		Stage stage = new Stage();
 		DirectoryChooser directoryChooser = new DirectoryChooser();
+		// REV: powinienes przekazac glowne okno jako parametr
 		File selectedFolder = directoryChooser.showDialog(stage);
 		if (selectedFolder == null) {
 			LOG.debug("No folder selected");
@@ -149,6 +154,7 @@ public class ImageViewerController {
 			alert.show();
 		}
 		if (selectedFolder != null) {
+			// REV: metoda listFiles() potrafi przefiltrowac pliki
 			File[] files = selectedFolder.listFiles();
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isFile()) {
@@ -178,6 +184,7 @@ public class ImageViewerController {
 			public void updateItem(String name, boolean empty) {
 				super.updateItem(name, empty);
 
+				// REV: ImageList moglby wyswietlac obiekty type File, wtedy nie musisz przeszukiwac listy
 				for (File file : files) {
 					if (file.getName().equals(name))
 						imageView.setImage(new Image("file:" + file.getAbsolutePath()));
@@ -198,6 +205,7 @@ public class ImageViewerController {
 	private void displayNext() {
 
 		if (imageFiles.isEmpty()) {
+			// REV: lepiej byloby deaktywowac przyciski, gdy lista obrazkow jest pusta
 			LOG.debug("No Image to display");
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("No Image to display");
@@ -224,6 +232,7 @@ public class ImageViewerController {
 
 	private void displayPrevious() {
 		if (imageFiles.isEmpty()) {
+			// REV: j.w.
 			LOG.debug("No Image to display");
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("No Image to display");
@@ -257,6 +266,7 @@ public class ImageViewerController {
 			alert.show();
 		} else {
 			String absolutePath = "";
+			// REV: j.w. ImageList<File>
 			for (int i = 0; i < imageFiles.size(); i++) {
 				if (imagesList.getSelectionModel().getSelectedItem().equals(imageFiles.get(i).getName())) {
 					absolutePath = "file:" + imageFiles.get(i).getAbsolutePath();
@@ -288,6 +298,7 @@ public class ImageViewerController {
 	}
 
 	private void slideShow() {
+		// REV: ten task i watek nie jest potrzebny, Timer tworzy wlasny watek
 		Task<Void> backgroundTask = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
@@ -297,6 +308,7 @@ public class ImageViewerController {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
+						// REV: zmiana obrazka powinna byc wykonana w watku JavaFX
 						displayNext();
 						LOG.debug("Thread is working");
 					}
